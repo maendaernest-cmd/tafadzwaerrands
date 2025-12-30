@@ -9,12 +9,17 @@ import BusinessStorefront from '../client/BusinessStorefront';
 import { extractLocationFromSocialLink, searchNearbyPlaces } from '../../services/gemini';
 import { calculateDeliveryPrice, formatCurrency } from '../../services/pricing';
 
-const MOCK_BUSINESSES = [
-  { name: 'OK Mart Avondale', img: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400', cat: 'Grocery', rating: 4.8 },
-  { name: 'Spar Borrowdale', img: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=400', cat: 'Grocery', rating: 4.9 },
-  { name: 'Greenwood Pharmacy', img: 'https://images.unsplash.com/photo-1586015555751-63bb77f4322a?auto=format&fit=crop&q=80&w=400', cat: 'Pharmacy', rating: 4.7 },
-  { name: 'The Cake Hut', img: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=400', cat: 'Bakery', rating: 5.0 },
-];
+import { MOCK_USERS, MOCK_ERRANDS } from '../../constants';
+
+// Create businesses from merchant users
+const MOCK_BUSINESSES = MOCK_USERS
+  .filter(user => user.role === 'MERCHANT')
+  .map((merchant, index) => ({
+    name: merchant.name,
+    img: merchant.avatar,
+    cat: index === 0 ? 'Grocery' : index === 1 ? 'Grocery' : 'Pharmacy',
+    rating: 4.6 + Math.random() * 0.4 // Random rating between 4.6-5.0
+  }));
 
 const ClientView: React.FC<{ user: User, errands: Errand[], onCreateErrand: (errand: Errand) => void, activeTab: 'DISCOVER' | 'TRACKING' | 'CREATE' | 'SHOP', onTabChange: (tab: 'DISCOVER' | 'TRACKING' | 'CREATE' | 'SHOP') => void }> = ({ user, errands, onCreateErrand, activeTab, onTabChange }) => {
   const [tiktokLink, setTiktokLink] = useState('');

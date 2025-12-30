@@ -7,12 +7,7 @@ import ChatRoom from '../common/ChatRoom.tsx';
 import { scanReceiptOCR } from '../../services/gemini.ts';
 import { formatCurrency } from '../../services/pricing.ts';
 
-const MOCK_JOBS = [
-  { id: '1', type: 'Grocery', fee: 12.50, dist: '2.5km', store: 'TM Pick n Pay Bond St', items: 12, budget: 60 },
-  { id: '2', type: 'Medicine', fee: 15.00, dist: '4.1km', store: 'Greenwood Pharmacy', items: 2, budget: 20 },
-  { id: '3', type: 'Document', fee: 8.00, dist: '1.2km', store: 'Harare Registry', items: 1, budget: 5 },
-  { id: '4', type: 'Hardware', fee: 22.00, dist: '7.8km', store: 'Halsteds Msasa', items: 5, budget: 150 }
-];
+import { MOCK_ERRANDS, MOCK_USERS, WORKER_EARNINGS_HISTORY } from '../../constants';
 
 const WorkerView: React.FC<{ user: User }> = ({ user }) => {
   const [activeJob, setActiveJob] = useState<any | null>(null);
@@ -75,21 +70,21 @@ const WorkerView: React.FC<{ user: User }> = ({ user }) => {
                 </div>
               </div>
 
-              <Map className="h-[400px] rounded-[2.5rem] shadow-lg border-4 border-white" pins={MOCK_JOBS.map((j, i) => ({ lat: 20 + (i*15), lng: 20 + (i*15), type: 'ERRAND' as const }))} />
+              <Map className="h-[400px] rounded-[2.5rem] shadow-lg border-4 border-white" pins={MOCK_ERRANDS.filter(e => e.status === 'PENDING').map((errand, i) => ({ lat: 20 + (i*15), lng: 20 + (i*15), type: 'ERRAND' as const }))} />
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                 {MOCK_JOBS.map(job => (
-                   <div key={job.id} className="bg-white p-8 rounded-[2.5rem] border border-gray-100 flex items-center justify-between shadow-sm hover:shadow-2xl hover:scale-[1.02] transition-all cursor-pointer group">
+                 {MOCK_ERRANDS.filter(e => e.status === 'PENDING').map(errand => (
+                   <div key={errand.id} className="bg-white p-8 rounded-[2.5rem] border border-gray-100 flex items-center justify-between shadow-sm hover:shadow-2xl hover:scale-[1.02] transition-all cursor-pointer group">
                      <div className="flex items-center space-x-5">
                        <div className="bg-red-50 p-4 rounded-2xl text-2xl group-hover:bg-red-100 transition-colors">
-                        {job.type === 'Grocery' ? '🛒' : job.type === 'Medicine' ? '💊' : '🔧'}
+                        🛒
                        </div>
                        <div>
-                         <h5 className="font-black text-gray-900 text-lg tracking-tight">{job.type} Errand</h5>
-                         <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{job.store} • {job.dist}</p>
+                         <h5 className="font-black text-gray-900 text-lg tracking-tight">{errand.pickup}</h5>
+                         <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{errand.distance}km • ${errand.budget}</p>
                        </div>
                      </div>
-                     <button onClick={() => handleAcceptJob(job)} className="bg-black text-white px-8 py-3 rounded-2xl font-black text-sm hover:bg-red-600 transition-all shadow-xl active:scale-95">Accept</button>
+                     <button onClick={() => handleAcceptJob(errand)} className="bg-black text-white px-8 py-3 rounded-2xl font-black text-sm hover:bg-red-600 transition-all shadow-xl active:scale-95">Accept</button>
                    </div>
                  ))}
               </div>

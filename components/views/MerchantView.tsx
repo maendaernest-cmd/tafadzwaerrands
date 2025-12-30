@@ -3,14 +3,19 @@ import React, { useState, useEffect, useRef } from 'react';
 import { User } from '../../types';
 import { formatCurrency } from '../../services/pricing';
 import MenuManager from '../merchant/MenuManager';
+import { MOCK_ERRANDS, MERCHANT_SALES_DATA, MOCK_USERS } from '../../constants';
 
 const MerchantView: React.FC<{ user: User }> = ({ user }) => {
   const [activeTab, setActiveTab] = useState<'ORDERS' | 'MENU'>('ORDERS');
-  const [orders, setOrders] = useState([
-    { id: 'ORD-4829', runner: 'Simba R.', items: 12, status: 'Ready', price: 45.50 },
-    { id: 'ORD-4911', runner: 'John D.', items: 2, status: 'Preparing', price: 12.00 },
-    { id: 'ORD-5012', runner: 'Sarah K.', items: 5, status: 'Ready', price: 28.50 }
-  ]);
+  const [orders, setOrders] = useState(
+    MOCK_ERRANDS.filter(e => e.merchantId === user.id || e.merchantId === 'm1').map(errand => ({
+      id: errand.id,
+      runner: errand.workerId ? MOCK_USERS.find(u => u.id === errand.workerId)?.name || 'Unassigned' : 'Unassigned',
+      items: errand.items.length,
+      status: errand.status === 'IN_PROGRESS' ? 'Ready' : errand.status === 'PREPARING' ? 'Preparing' : 'Ready',
+      price: errand.currentSpend || errand.budget * 0.8
+    }))
+  );
 
   // Incoming Order Simulation
   const [incomingOrder, setIncomingOrder] = useState<any | null>(null);

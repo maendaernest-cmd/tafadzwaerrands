@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { User } from '../../types';
 import Map, { MapPin } from '../common/Map';
 import { formatCurrency } from '../../services/pricing';
+import { ADMIN_ANALYTICS, MOCK_USERS, MOCK_ERRANDS } from '../../constants';
 
 const AdminView: React.FC<{ user: User }> = ({ user }) => {
   const [selectedPin, setSelectedPin] = useState<MapPin | null>(null);
@@ -15,10 +16,10 @@ const AdminView: React.FC<{ user: User }> = ({ user }) => {
     <div className="max-w-7xl mx-auto px-4 py-8 space-y-8 animate-in fade-in duration-500 pb-20" onClick={() => setSelectedPin(null)}>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: 'Total Volume', value: formatCurrency(24850.20), color: 'text-green-600' },
-          { label: 'Active Errands', value: '142', color: 'text-red-600' },
-          { label: 'Online Runners', value: '38', color: 'text-blue-600' },
-          { label: 'Merchant Partners', value: '22', color: 'text-purple-600' }
+          { label: 'Total Volume', value: formatCurrency(ADMIN_ANALYTICS.totalVolume), color: 'text-green-600' },
+          { label: 'Active Errands', value: ADMIN_ANALYTICS.activeErrands.toString(), color: 'text-red-600' },
+          { label: 'Online Runners', value: ADMIN_ANALYTICS.onlineRunners.toString(), color: 'text-blue-600' },
+          { label: 'Merchant Partners', value: ADMIN_ANALYTICS.merchantPartners.toString(), color: 'text-purple-600' }
         ].map(stat => (
           <div key={stat.label} className="bg-white p-8 rounded-[2.5rem] border shadow-sm group hover:border-red-500 transition-all">
             <p className="text-gray-400 text-[10px] font-black uppercase tracking-[0.2em] mb-2">{stat.label}</p>
