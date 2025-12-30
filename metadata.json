@@ -1,0 +1,8 @@
+{
+  "name": "Tafadzwa Errand",
+  "description": "A high-performance three-sided marketplace for on-demand errands, shopping, and logistics, featuring real-time budget tracking and social media discovery.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ]
+}

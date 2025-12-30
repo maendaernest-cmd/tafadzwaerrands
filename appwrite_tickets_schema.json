@@ -1,0 +1,89 @@
+
+{
+  "$id": "tickets",
+  "name": "Support Tickets",
+  "enabled": true,
+  "documentSecurity": true,
+  "attributes": [
+    {
+      "key": "user_id",
+      "type": "string",
+      "size": 36,
+      "required": true,
+      "array": false,
+      "description": "ID of the user who created the support ticket."
+    },
+    {
+      "key": "category",
+      "type": "enum",
+      "elements": [
+        "Payment",
+        "Tech Support",
+        "Safety",
+        "Merchant Issue"
+      ],
+      "required": true,
+      "array": false,
+      "description": "Classification of the support request."
+    },
+    {
+      "key": "priority",
+      "type": "enum",
+      "elements": [
+        "Low",
+        "Medium",
+        "Urgent"
+      ],
+      "required": true,
+      "array": false,
+      "description": "Priority level of the support request."
+    },
+    {
+      "key": "transcript",
+      "type": "string",
+      "size": 10000,
+      "required": false,
+      "array": false,
+      "description": "History of the conversation and resolution logs."
+    },
+    {
+      "key": "status",
+      "type": "enum",
+      "elements": [
+        "open",
+        "pending",
+        "resolved",
+        "closed"
+      ],
+      "default": "open",
+      "required": true,
+      "array": false,
+      "description": "Current resolution status of the ticket."
+    }
+  ],
+  "indexes": [
+    {
+      "key": "user_id_index",
+      "type": "key",
+      "attributes": ["user_id"]
+    },
+    {
+      "key": "status_index",
+      "type": "key",
+      "attributes": ["status"]
+    },
+    {
+      "key": "priority_index",
+      "type": "key",
+      "attributes": ["priority"]
+    }
+  ],
+  "permissions": [
+    "read(\"role:support\")",
+    "read(\"role:admin\")",
+    "create(\"role:member\")",
+    "update(\"role:support\")",
+    "update(\"role:admin\")",
+    "delete(\"role:admin\")"
+  ]
+}
